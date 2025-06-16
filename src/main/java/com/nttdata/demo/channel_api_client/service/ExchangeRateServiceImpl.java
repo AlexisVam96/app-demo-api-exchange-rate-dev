@@ -38,10 +38,11 @@ public class ExchangeRateServiceImpl implements  ExchangeRateService{
     @Override
     public Mono<ExchangeRate> save(ExchangeRate exchangeRate) {
 
-        ExchangeRate exchange = new ExchangeRate();
-        exchange.setType(exchangeRate.getType());
-        exchange.setValor(exchangeRate.getValor());
-        exchange.setCreate_at(exchangeRate.getCreate_at());
+        ExchangeRate exchange = ExchangeRate.builder()
+                .type(exchangeRate.getType())
+                .valor(exchangeRate.getValor())
+                .create_at(exchangeRate.getCreate_at())
+                .build();
 
         if(Objects.isNull(exchange.getCreate_at()))
             exchange.setCreate_at(LocalDateTime.now());
