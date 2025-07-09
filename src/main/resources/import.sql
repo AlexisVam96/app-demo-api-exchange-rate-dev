@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS tb_exchange_rate (
     create_at TIMESTAMP
 );
 
-INSERT INTO tb_exchange_rate (type, valor, create_at) VALUES ('USD', 3.71, now());
-INSERT INTO tb_exchange_rate (type, valor, create_at) VALUES ('EUR', 4.01, now());
+--INSERT INTO tb_exchange_rate (type, valor, create_at) VALUES ('USD', 3.71, now());
+--INSERT INTO tb_exchange_rate (type, valor, create_at) VALUES ('EUR', 4.01, now());

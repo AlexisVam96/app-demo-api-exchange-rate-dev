@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    container_name: postgres-bitnami
+    environment:
+      - POSTGRESQL_DATABASE=db_demo
+      - POSTGRESQL_USERNAME=admin
+      - POSTGRESQL_PASSWORD=admin
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/bitnami/postgresql
+    networks:
+      - springnet
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: springboot-app
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_R2DBC_URL: r2dbc:postgresql://postgres:5432/db_demo
+      SPRING_R2DBC_USERNAME: admin
+      SPRING_R2DBC_PASSWORD: admin
+    networks:
+      - springnet
+
+volumes:
+  pg_data:
+
+networks:
+  springnet:

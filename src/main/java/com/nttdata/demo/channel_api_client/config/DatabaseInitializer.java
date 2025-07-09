@@ -6,10 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import reactor.core.publisher.Mono;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.stream.Collectors;
-
 @Configuration
 public class DatabaseInitializer {
 
@@ -20,16 +16,16 @@ public class DatabaseInitializer {
     public void initialize() {
         Mono.from(connectionFactory.create())
                 .flatMapMany(connection -> {
-                    // Lee el script SQL
                     String script;
-                    try {
-                        script = Files.lines(Paths.get("src/main/resources/import.sql"))
-                                .collect(Collectors.joining("\n"));
+                    try (var inputStream = getClass().getClassLoader().getResourceAsStream("import.sql")) {
+                        if (inputStream == null) {
+                            throw new RuntimeException("Archivo import.sql no encontrado en classpath");
+                        }
+                        script = new String(inputStream.readAllBytes());
                     } catch (Exception e) {
                         throw new RuntimeException("Failed to read SQL script", e);
                     }
 
-                    // Ejecuta el script SQL
                     return Mono.from(connection.createStatement(script).execute())
                             .doFinally(signalType -> connection.close())
                             .then();
