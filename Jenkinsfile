@@ -6,8 +6,8 @@ pipeline {
         maven 'Maven'     // (opcional) si configuraste Maven en Jenkins
     }
     environment {
-        DOCKER_IMAGE = "alexisdev96/app-demo-api-exchange-rate-dev"
-        DOCKER_TAG   = "latest"
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+        IMAGE_NAME = "alexisdev96/app-demo-api-exchange-rate-dev"
     }
 
     stages {
@@ -19,19 +19,21 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                script {
-                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
-                }
+                bat "docker build -t %IMAGE_NAME%:latest ."
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Push to DockerHub') {
             steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
-                        docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
-                    }
-                }
+                bat "echo %DOCKERHUB_CREDENTIALS_PSW% | docker login -u %DOCKERHUB_CREDENTIALS_USR% --password-stdin"
+                bat "docker push %IMAGE_NAME%:latest"
+            }
+        }
+
+        stage('Deploy with Docker Compose') {
+            steps {
+                bat "docker compose down || exit 0"
+                bat "docker compose up -d --build"
             }
         }
     }
