@@ -3,7 +3,7 @@ version: '3.8'
 services:
   postgres:
     image: bitnami/postgresql:latest
-    container_name: postgres-bitnami
+    container_name: postgres
     environment:
       - POSTGRESQL_DATABASE=db_demo
       - POSTGRESQL_USERNAME=admin
@@ -25,7 +25,7 @@ services:
     depends_on:
       - postgres
     environment:
-      SPRING_R2DBC_URL: r2dbc:postgresql://admin:admin@postgres:5432/db_demo
+      SPRING_R2DBC_URL: r2dbc:postgresql://postgres:5432/db_demo
       SPRING_R2DBC_USERNAME: admin
       SPRING_R2DBC_PASSWORD: admin
     networks:
