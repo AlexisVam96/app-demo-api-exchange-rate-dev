@@ -9,6 +9,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 
 @Service
@@ -62,7 +63,7 @@ public class ExchangeRateServiceImpl implements  ExchangeRateService{
                 .flatMap(exchange -> {
                     exchange.setType(exchangeRate.getType());
                     exchange.setValor(exchangeRate.getValor());
-                    exchange.setCreate_at(exchangeRate.getCreate_at());
+                    exchange.setCreate_at(Objects.isNull(exchangeRate.getCreate_at()) ? LocalDateTime.now() : exchangeRate.getCreate_at());
                     return exchangeRateRepository.save(exchange);
                 });
     }
