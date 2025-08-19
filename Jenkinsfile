@@ -1,24 +1,16 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
+    tools {
+        jdk 'jdk17'        // el nombre que configuraste en Global Tool Configuration
+        maven 'Maven3'     // (opcional) si configuraste Maven en Jenkins
+    }
 
+    stages {
         stage('Build') {
             steps {
-                echo "Ejecutando build en Windows..."
-                bat 'mvn clean install'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo "Ejecutando pruebas..."
-                bat 'mvn test'
+                bat 'mvn clean install'  // en Windows
+                // sh 'mvn clean install' // en Linux
             }
         }
     }
