@@ -10,25 +10,15 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo "Ejecutando el build de la aplicación..."
-                // ejemplo si usas Maven
-                sh 'mvn clean install'
-                // ejemplo si usas Gradle
-                // sh './gradlew build'
+                echo "Ejecutando build en Windows..."
+                bat 'mvn clean install'
             }
         }
 
         stage('Test') {
             steps {
                 echo "Ejecutando pruebas..."
-                // sh 'mvn test'
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo "Desplegando aplicación..."
-                // aquí tus pasos de despliegue
+                bat 'mvn test'
             }
         }
     }
